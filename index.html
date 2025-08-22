@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Product Catalogue</title>
+
+    <!-- PWA Manifest & Theme -->
+    <link rel="manifest" href="./manifest.json" />
+    <meta name="theme-color" content="#111827" />
+    <link rel="apple-touch-icon" href="https://i.imgur.com/J4gA19c.png">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Product Catalogue">
+    
+    <script src="https://cdn.tailwindcss.com?plugins=typography"></script>
+    <script>
+      tailwind.config = {
+        darkMode: 'class',
+      }
+    </script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="./index.css" />
+    <!-- Font link will be dynamically added by React -->
+    <style>
+      :root {
+        /* Light Theme Defaults (overridden by JS) */
+        --app-bg: #f3f4f6;
+        --app-bg-image: none;
+        --main-bg: #ffffff;
+        --main-text: #1f2937;
+        /* UPDATED: Stronger default shadow for light mode */
+        --main-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.07), 0 5px 10px -5px rgba(0, 0, 0, 0.04);
+        --main-border-color: #e5e7eb; /* gray-200 */
+        
+        --primary-color: #4f46e5;
+        
+        /* Buttons */
+        --btn-primary-bg: #4f46e5;
+        --btn-primary-text: #ffffff;
+        --btn-primary-hover-bg: #4338ca;
+        --btn-destructive-bg: #dc2626;
+        --btn-destructive-text: #ffffff;
+        --btn-destructive-hover-bg: #b91c1c;
+
+        /* Swiper (Light) */
+        --swiper-nav-bg: rgba(255, 255, 255, 0.8);
+        --swiper-nav-border: rgba(0, 0, 0, 0.1);
+        --swiper-nav-hover-bg: rgba(255, 255, 255, 1);
+        --swiper-nav-icon-color: #374151;
+        --swiper-pagination-color: var(--primary-color);
+        
+        /* Glassmorphism (Light) */
+        --glass-bg: rgba(255, 255, 255, 0.7);
+        --glass-border: rgba(0, 0, 0, 0.1); /* Slightly more visible */
+      }
+      
+      html.dark {
+        /* Dark Theme Defaults (overridden by JS) */
+        --app-bg: #111827;
+        --app-bg-image: radial-gradient(at 15% 20%, hsla(220, 80%, 30%, 0.25) 0px, transparent 50%),
+                        radial-gradient(at 85% 80%, hsla(280, 70%, 45%, 0.2) 0px, transparent 50%);
+        --main-bg: #1f2937;
+        --main-text: #e5e7eb;
+        --main-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.55), 
+                       inset 0 1px 0 0 rgba(255, 255, 255, 0.05),
+                       0 0 0 1px rgba(255, 255, 255, 0.03);
+        --main-border-color: rgba(255, 255, 255, 0.08);
+
+        --primary-color: #818cf8;
+        
+        /* Buttons */
+        --btn-primary-bg: #4f46e5;
+        --btn-primary-text: #ffffff;
+        --btn-primary-hover-bg: #6366f1;
+        --btn-destructive-bg: #be123c;
+        --btn-destructive-text: #ffffff;
+        --btn-destructive-hover-bg: #9f1239;
+
+        /* Swiper (Dark) */
+        --swiper-nav-bg: rgba(31, 41, 55, 0.6);
+        --swiper-nav-border: rgba(255, 255, 255, 0.1);
+        --swiper-nav-hover-bg: rgba(55, 65, 81, 0.8);
+        --swiper-nav-icon-color: #ffffff;
+        --swiper-pagination-color: var(--primary-color);
+        
+        /* Glassmorphism (Dark) */
+        --glass-bg: rgba(31, 41, 55, 0.5);
+        --glass-border: rgba(255, 255, 255, 0.08);
+      }
+
+      body {
+        background-color: var(--app-bg);
+        background-image: var(--app-bg-image);
+        color: var(--main-text);
+        transition: background-color 0.3s, color 0.3s;
+        font-family: var(--body-font-family, 'Inter', sans-serif);
+        font-weight: var(--body-font-weight, 400);
+        font-style: var(--body-font-style, normal);
+        text-decoration: var(--body-font-decoration, none);
+        overflow-wrap: break-word;
+        overflow-x: hidden;
+      }
+      
+      .main-content-container {
+        background-color: var(--main-bg);
+        box-shadow: var(--main-shadow);
+        min-height: 100vh;
+        /* Add a transparent border to prevent layout shift */
+        border: 1px solid transparent; 
+      }
+
+      /* --- START: Light Mode Readability & Depth Enhancements --- */
+
+      html:not(.dark) .main-content-container {
+        border-color: var(--main-border-color);
+      }
+      
+      /* Stronger, more defined shadows for cards in light mode */
+      html:not(.dark) .shadow-lg,
+      html:not(.dark) .shadow-xl {
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.07), 0 2px 4px -2px rgba(0, 0, 0, 0.07) !important;
+      }
+
+      /* Stronger hover shadow for cards */
+      html:not(.dark) [class*="hover:shadow-"]:hover {
+         box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.1) !important;
+      }
+      
+      /* Add a clear border to cards and other elements in light mode. This targets elements that already have a border class. */
+      html:not(.dark) .border,
+      html:not(.dark) .border-gray-200\/80,
+      html:not(.dark) .dark\:border-gray-700,
+      html:not(.dark) .dark\:border-gray-700\/50 {
+         border-color: #e5e7eb !important; /* gray-200 */
+      }
+
+      /* Add depth to input fields in light mode */
+      html:not(.dark) input[type='text'],
+      html:not(.dark) input[type='password'],
+      html:not(.dark) input[type='url'],
+      html:not(.dark) input[type='number'],
+      html:not(.dark) input[type='date'],
+      html:not(.dark) select,
+      html:not(.dark) textarea {
+          border-color: #d1d5db; /* gray-300 */
+          box-shadow: inset 0 1px 2px rgba(0,0,0,0.03);
+      }
+      
+      /* --- END: Light Mode Enhancements --- */
+
+
+      .swiper-button-next,
+      .swiper-button-prev {
+        background-color: var(--swiper-nav-bg);
+        backdrop-filter: blur(8px);
+        border: 1px solid var(--swiper-nav-border);
+        border-radius: 9999px;
+        width: 44px;
+        height: 44px;
+        box-shadow: 0 4px 14px rgba(0,0,0,0.2);
+        transition: all 0.2s ease-in-out;
+      }
+      .swiper-button-next:hover,
+      .swiper-button-prev:hover {
+        background-color: var(--swiper-nav-hover-bg);
+        transform: scale(1.08);
+        box-shadow: 0 6px 16px rgba(0,0,0,0.25);
+      }
+      .swiper-button-next::after,
+      .swiper-button-prev::after {
+        font-size: 18px;
+        font-weight: 800;
+        color: var(--swiper-nav-icon-color);
+      }
+      .swiper-pagination-bullet-active {
+        background-color: var(--swiper-pagination-color) !important;
+      }
+
+      .section-heading {
+        font-family: var(--headings-font-family, 'Montserrat', sans-serif);
+        font-weight: var(--headings-font-weight, 800);
+        font-style: var(--headings-font-style, normal);
+        text-decoration: var(--headings-font-decoration, none);
+      }
+      
+      .item-title {
+        font-family: var(--item-titles-font-family, 'Poppins', sans-serif);
+        font-weight: var(--item-titles-font-weight, 600);
+        font-style: var(--item-titles-font-style, normal);
+        text-decoration: var(--item-titles-font-decoration, none);
+      }
+      
+      .effect-glassmorphism {
+        backdrop-filter: blur(16px) saturate(150%);
+        -webkit-backdrop-filter: blur(16px) saturate(150%);
+        border: 1px solid var(--glass-border);
+        background-color: var(--glass-bg);
+      }
+      
+      .effect-3d-shadow {
+        box-shadow: rgba(0, 0, 0, 0.2) 0px 1px 3px 0px, rgba(0, 0, 0, 0.16) 0px 1px 2px 0px;
+        box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.3), 0 4px 6px -4px rgb(0 0 0 / 0.3),
+                    inset 0 -1px 0 0 rgb(255 255 255 / 0.05);
+      }
+
+      .btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.5rem;
+        font-weight: 600;
+        padding: 0.625rem 1.25rem;
+        border-radius: 9999px;
+        border: 1px solid transparent;
+        transition: all 0.2s ease-in-out;
+        cursor: pointer;
+        text-decoration: none;
+        box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px -1px rgba(0, 0, 0, 0.1);
+      }
+      
+      .btn:disabled {
+        opacity: 0.6;
+        cursor: not-allowed;
+      }
+      
+      .btn-primary {
+        background-color: var(--btn-primary-bg);
+        color: var(--btn-primary-text);
+      }
+      .btn-primary:hover:not(:disabled) {
+        background-color: var(--btn-primary-hover-bg);
+        transform: translateY(-1px);
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1);
+      }
+
+      .btn-destructive {
+        background-color: var(--btn-destructive-bg);
+        color: var(--btn-destructive-text);
+      }
+      .btn-destructive:hover:not(:disabled) {
+        background-color: var(--btn-destructive-hover-bg);
+        transform: translateY(-1px);
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1);
+      }
+    </style>
+  <script type="importmap">
+{
+  "imports": {
+    "react": "https://esm.sh/react@^19.1.1",
+    "react-dom/": "https://esm.sh/react-dom@^19.1.1/",
+    "react/": "https://esm.sh/react@^19.1.1/",
+    "react-router-dom": "https://esm.sh/react-router-dom@^7.8.1",
+    "swiper/": "https://esm.sh/swiper@^11.2.10/",
+    "framer-motion": "https://esm.sh/framer-motion@^12.23.12",
+    "pdfjs-dist": "https://esm.sh/pdfjs-dist@^5.4.54",
+    "jszip": "https://esm.sh/jszip@^3.10.1",
+    "@google/genai": "https://esm.sh/@google/genai@^1.15.0",
+    "idb": "https://esm.sh/idb@^8.0.3",
+    "react-pageflip": "https://esm.sh/react-pageflip@^2.0.3",
+    "vite": "https://esm.sh/vite@^7.1.3",
+    "@vitejs/plugin-react": "https://esm.sh/@vitejs/plugin-react@^5.0.1"
+  }
+}
+</script>
+<link rel="stylesheet" href="/index.css">
+</head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/index.tsx"></script>
+  </body>
+</html>

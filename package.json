@@ -1,0 +1,30 @@
+{
+  "name": "interactive-kiosk",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc && vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "@google/genai": "^1.15.0",
+    "framer-motion": "^12.23.12",
+    "idb": "^8.0.3",
+    "jszip": "^3.10.1",
+    "pdfjs-dist": "^4.5.136",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "react-pageflip": "^2.0.3",
+    "react-router-dom": "^7.8.1",
+    "swiper": "^11.2.10"
+  },
+  "devDependencies": {
+    "@types/react": "^18.3.3",
+    "@types/react-dom": "^18.3.0",
+    "@vitejs/plugin-react": "^4.3.1",
+    "typescript": "^5.5.4",
+    "vite": "^5.4.2"
+  }
+}

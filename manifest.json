@@ -1,0 +1,23 @@
+{
+  "short_name": "Product Catalogue",
+  "name": "Interactive Product Catalogue",
+  "description": "An interactive digital catalogue for any brand, allowing users to browse products, view details, and explore collections.",
+  "icons": [
+    {
+      "src": "https://i.imgur.com/J4gA19c.png",
+      "type": "image/png",
+      "sizes": "192x192",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "https://i.imgur.com/J4gA19c.png",
+      "type": "image/png",
+      "sizes": "512x512",
+      "purpose": "any maskable"
+    }
+  ],
+  "start_url": ".",
+  "display": "standalone",
+  "theme_color": "#111827",
+  "background_color": "#f9fafb"
+}
